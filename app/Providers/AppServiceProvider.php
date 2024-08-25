@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\UserMiddleware;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +21,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $router = $this->app['router'];
+
+        // Register middleware globally
+        $router->aliasMiddleware('auth.admin', AdminMiddleware::class);
+        $router->aliasMiddleware('auth.user', UserMiddleware::class);
+
     }
 }
