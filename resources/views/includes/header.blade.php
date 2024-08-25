@@ -1,9 +1,9 @@
 <!-- Navbar & Hero Start -->
 <div class="container-fluid nav-bar sticky-top px-4 py-2 py-lg-0">
     <nav class="navbar navbar-expand-lg navbar-light">
-        <a href="" class="navbar-brand p-0">
-            <h1 class="display-6 text-dark"><i class="fas fa-swimmer text-primary me-3"></i>WaterLand</h1>
-            <!-- <img src="img/logo.png" alt="Logo"> -->
+        <a href="{{route('home')}}" class="navbar-brand p-0">
+            <h1 class="display-6 text-dark"><i class="fas fa-swimmer text-primary me-3"></i>Shipment</h1>
+            {{-- <img src="{{asset('assets/img/logo.png')}}" alt="Logo"> --}}
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="fa fa-bars"></span>
@@ -35,7 +35,20 @@
                 <a class="btn btn-square btn-light rounded-circle mx-1" href=""><i class="fab fa-instagram"></i></a>
                 <a class="btn btn-square btn-light rounded-circle mx-1" href=""><i class="fab fa-linkedin-in"></i></a>
             </div>
-            <a href="#" class="btn btn-primary rounded-pill py-2 px-4 flex-shrink-0">Get Started</a>
+            @if (Auth::check() && Auth::user()->is_admin)
+            <a href="{{route('admin.dashboard')}}" class="btn btn-primary rounded-pill py-2 px-4 flex-shrink-0">Dashboard</a>   
+            @endif
+
+            @if (Auth::check() && !Auth::user()->is_admin)
+            <a href="{{route('user.dashboard')}}" class="btn btn-primary rounded-pill py-2 px-4 flex-shrink-0">Dashboard</a>   
+            @endif
+
+            @if (!Auth::check())
+            <a href="{{route('login')}}" class="btn btn-primary rounded-pill py-2 px-4 flex-shrink-0">Login</a>   
+            @endif
+
+           
+           
         </div>
     </nav>
 </div>
