@@ -171,4 +171,224 @@ class FedExService
         }
     }
 
+    public function fedexShipping(){
+        
+        $token = $this->token();
+        if($token['success']){
+            $tok = $token['response']['access_token'];
+            $headers = [
+                'Content-Type: application/json',
+                'Accept: application/json',
+                'Authorization: Bearer '.$tok,
+                'X-locale: en_US',
+                'Pragma: no-cache',
+                'Cache-Control: no-cache, no-store'
+            ];
+
+            $payload = [
+                "labelResponseOptions" => "URL_ONLY", 
+                "requestedShipment" => [
+                    "shipper" => [
+                        "contact" => [
+                            "personName" => "SHIPPER NAME", 
+                            "phoneNumber" => 1234567890, 
+                            "companyName" => "Shipper Company Name" 
+                        ], 
+                        "address" => [
+                            "streetLines" => [
+                                "SHIPPER STREET LINE 1" 
+                            ], 
+                            "city" => "HARRISON", 
+                            "stateOrProvinceCode" => "AR", 
+                            "postalCode" => 72601, 
+                            "countryCode" => "US" 
+                        ] 
+                    ], 
+                    "recipients" => [
+                        [
+                            "contact" => [
+                                "personName" => "Aftab", 
+                                "phoneNumber" => 1234567890, 
+                                "companyName" => "Recipient Company Name" 
+                            ], 
+                            "address" => [
+                                "streetLines" => [
+                                    "RECIPIENT STREET LINE 1", 
+                                    "RECIPIENT STREET LINE 2" 
+                                ], 
+                                "city" => "Collierville", 
+                                "stateOrProvinceCode" => "TN", 
+                                "postalCode" => 38017, 
+                                "countryCode" => "US" 
+                            ] 
+                        ] 
+                    ], 
+                    "shipDatestamp" => "2020-07-03", 
+                    "serviceType" => "PRIORITY_OVERNIGHT", 
+                    "packagingType" => "FEDEX_ENVELOPE", 
+                    "pickupType" => "USE_SCHEDULED_PICKUP", 
+                    "blockInsightVisibility" => false, 
+                    "shippingChargesPayment" => [
+                        "paymentType" => "SENDER" 
+                    ], 
+                    "shipmentSpecialServices" => [
+                        "specialServiceTypes" => [
+                            "RETURN_SHIPMENT" 
+                        ], 
+                        "returnShipmentDetail" => [
+                            "returnType" => "PRINT_RETURN_LABEL" 
+                        ] 
+                    ], 
+                    "labelSpecification" => [
+                        "imageType" => "PDF", 
+                        "labelStockType" => "PAPER_85X11_TOP_HALF_LABEL" 
+                    ], 
+                    "requestedPackageLineItems" => [
+                        [
+                            "weight" => [
+                                "value" => 1, 
+                                "units" => "LB" 
+                            ] 
+                        ] 
+                    ] 
+                 ], 
+                "accountNumber" => [
+                    "value" => $this->accountNumber 
+                ] 
+            ]; 
+            
+           
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $this->baseUrl.'/ship/v1/shipments');
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); // Added this on local system to avoid SSL error
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // Added this on local system to avoid SSL error
+            curl_setopt($ch, CURLOPT_ENCODING, "gzip"); // Added this to decode the response            
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+            
+            $output         =   curl_exec($ch);
+            $http_status    =   curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $content_type   =   curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+            $curlerr        =   curl_error($ch);
+            $header_out     =   curl_getinfo($ch);
+            
+            curl_close($ch);
+
+            $out  = json_decode($output,true);
+            echo "<pre>"; print_r($out); die;
+
+            echo "OUTPUT: ".$output."<br><br>";
+            echo "HTTP STATUS: ".$http_status."<br><br>";
+            echo "CONTENT TYPE: ".$content_type."<br><br>";
+            echo "ERROR: ".$curlerr."<br><br>";
+            die();
+        }else{
+            dd("invalid token");
+        }
+    }
+
+
+    public function fedexLocationByPincode($pincode){
+        
+        $token = $this->token();
+        if($token['success']){
+            $tok = $token['response']['access_token'];
+            $headers = [
+                'Content-Type: application/json',
+                'Accept: application/json',
+                'Authorization: Bearer '.$tok,
+                'X-locale: en_US',
+                'Pragma: no-cache',
+                'Cache-Control: no-cache, no-store'
+            ];
+
+            $payload = [
+                "locationsSummaryRequestControlParameters" => [
+                    "distance" => [
+                        "units" => "MI", 
+                        "value" => 100
+                    ] 
+                ], 
+                "locationSearchCriterion" => "ADDRESS", 
+                "location" => [
+                    "address" => [
+                        // "city" => "Beverly Hills", 
+                        // "stateOrProvinceCode" => "CA", 
+                        "postalCode" => $pincode, 
+                        "countryCode" => "US" 
+                    ] 
+                ],
+                'sort'=>[
+                    'criteria'=>'DISTANCE',
+                    'order'=>'ASCENDING'
+                ],
+                // 'locationCapabilities'=>[
+                //     [
+                //         'transferOfPossessionType'=>'DROPOFF'
+                //     ]
+                // ]
+            ]; 
+            
+           
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $this->baseUrl.'/location/v1/locations');
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); // Added this on local system to avoid SSL error
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // Added this on local system to avoid SSL error
+            curl_setopt($ch, CURLOPT_ENCODING, "gzip"); // Added this to decode the response            
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+            
+            $output         =   curl_exec($ch);
+            $http_status    =   curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $content_type   =   curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+            $curlerr        =   curl_error($ch);
+            $header_out     =   curl_getinfo($ch);
+            
+            curl_close($ch);
+
+            if($http_status == 200){
+
+                $out  = json_decode($output,true);
+                return [
+                    'status_code'=>$http_status,
+                    'response'=>$out
+                ];
+
+            }else{
+                return [
+                    'status_code'=>$http_status,
+                    'response'=>$output,
+                    'header'=>$header_out,
+                    'msg'=> 'Error from the api'                     
+                ];
+            }
+
+            
+
+            
+            // dd($out['output']['locationDetailList']);
+            // echo "<pre>"; print_r($out['output']['locationDetailList'][0]); die;
+
+            // echo "OUTPUT: ".$output."<br><br>";
+            // echo "HTTP STATUS: ".$http_status."<br><br>";
+            // echo "CONTENT TYPE: ".$content_type."<br><br>";
+            // echo "ERROR: ".$curlerr."<br><br>";
+            // die();
+        }else{
+
+            return [
+                'status_code'=>201,
+                'msg'=>'Invalid APi Token'
+            ];
+        }
+    }
+
 }
