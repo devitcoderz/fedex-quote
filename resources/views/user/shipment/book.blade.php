@@ -28,7 +28,7 @@
                                     <div class="col">
                                         <div class="mb-3">
                                             <label class="form-check form-check-inline">
-                                                <input class="form-check-input" checked type="radio" value="" name="from_address_type" id="from_address_type"  value="new">
+                                                <input class="form-check-input" checked type="radio"  name="from_address_type" id="from_address_type"  value="new">
                                                 <span class="form-check-label">
                                                   New Address
                                                 </span>
@@ -38,26 +38,32 @@
                                             <div class="mb-3">
                                                 <label for="from_first_name" class="form-label">First Name <span class="text-danger">*</span></label>
                                                 <input type="text" name="from_first_name" id="from_first_name" class="form-control form-control-lg">
+                                                <span class="error text-danger"></span>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="from_last_name" class="form-label">Last Name <span class="text-danger">*</span></label>
                                                 <input type="text" name="from_last_name" id="from_last_name" class="form-control form-control-lg">
+                                                <span class="error text-danger"></span>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="from_company" class="form-label">Company</label>
                                                 <input type="text" name="from_company" id="from_company" class="form-control form-control-lg">
+                                                <span class="error text-danger"></span>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="from_street_1" class="form-label">Street 1 <span class="text-danger">*</span></label>
                                                 <input type="text" name="from_street_1" id="from_street_1" class="form-control form-control-lg">
+                                                <span class="error text-danger"></span>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="from_street_2" class="form-label">Street 2</label>
                                                 <input type="text" name="from_street_2" id="from_street_2" class="form-control form-control-lg">
+                                                <span class="error text-danger"></span>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="from_city" class="form-label">City <span class="text-danger">*</span></label>
                                                 <input type="text" name="from_city" id="from_city" class="form-control form-control-lg">
+                                                <span class="error text-danger"></span>
                                             </div>
     
                                             <div class="mb-3">
@@ -68,26 +74,29 @@
                                                     <option value="{{$v->code}}">{{$v->code}} - {{$v->state}}</option>
                                                     @endforeach
                                                 </select>
+                                                <span class="error text-danger"></span>
                                             </div>
     
                                             <div class="mb-3">
                                                 <label for="from_zipcode" class="form-label">Zip Code <span class="text-danger">*</span></label>
                                                 <input type="text" name="from_zipcode" id="from_zipcode" class="form-control form-control-lg">
+                                                <span class="error text-danger"></span>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="from_phone_number" class="form-label">Phone Number <span class="text-danger">*</span></label>
                                                 <input type="text" name="from_phone_number" id="from_phone_number" class="form-control form-control-lg">
+                                                <span class="error text-danger"></span>
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-check form-check-inline">
-                                                    <input name="from_save_to_address_book" id="from_save_to_address_book" class="form-check-input" type="checkbox" value="save">
+                                                    <input name="from_save_to_address_book" id="from_save_to_address_book" class="form-check-input" type="checkbox">
                                                     <span class="form-check-label">
                                                       Save to address book
                                                     </span>
                                                 </label>
 
                                                 <label class="form-check form-check-inline">
-                                                    <input class="form-check-input" name="from_make_address_default" id="from_make_address_default" type="checkbox" value="default">
+                                                    <input class="form-check-input" name="from_make_address_default" id="from_make_address_default" type="checkbox">
                                                     <span class="form-check-label">
                                                       Make it default
                                                     </span>
@@ -141,26 +150,32 @@
                                             <div class="mb-3">
                                                 <label for="to_first_name" class="form-label">First Name <span class="text-danger">*</span></label>
                                                 <input type="text" name="to_first_name" id="to_first_name" class="form-control form-control-lg">
+                                                <span class="error text-danger"></span>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="to_last_name" class="form-label">Last Name <span class="text-danger">*</span></label>
                                                 <input type="text" name="to_last_name" id="to_last_name" class="form-control form-control-lg">
+                                                <span class="error text-danger"></span>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="to_company" class="form-label">Company</label>
                                                 <input type="text" name="to_company" id="to_company" class="form-control form-control-lg">
+                                                <span class="error text-danger"></span>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="to_street_1" class="form-label">Street 1 <span class="text-danger">*</span></label>
                                                 <input type="text" name="to_street_1" id="to_street_1" class="form-control form-control-lg">
+                                                <span class="error text-danger"></span>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="to_street_2" class="form-label">Street 2</label>
                                                 <input type="text" name="to_street_2" id="to_street_2" class="form-control form-control-lg">
+                                                <span class="error text-danger"></span>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="to_city" class="form-label">City <span class="text-danger">*</span></label>
                                                 <input type="text" name="to_city" id="to_city" class="form-control form-control-lg">
+                                                <span class="error text-danger"></span>
                                             </div>
     
                                             <div class="mb-3">
@@ -171,17 +186,20 @@
                                                     <option value="{{$v->code}}">{{$v->code}} - {{$v->state}}</option>
                                                     @endforeach
                                                 </select>
+                                                <span class="error text-danger"></span>
                                             </div>
     
                                             <div class="mb-3">
                                                 <label for="to_zipcode" class="form-label">Zip Code <span class="text-danger">*</span></label>
                                                 <input type="text" name="to_zipcode" id="to_zipcode" class="form-control form-control-lg">
+                                                <span class="error text-danger"></span>
                                             </div>
                                             <div class="row">
                                                 <div class="col-xl-6 col-xxl-6">
                                                     <div class="mb-3">
                                                         <label for="to_phone_number" class="form-label">Phone Number <span class="text-danger">*</span></label>
                                                         <input type="text" name="to_phone_number" id="to_phone_number" class="form-control form-control-lg">
+                                                        <span class="error text-danger"></span>
                                                     </div>
                                                     
                                                 </div>
@@ -189,6 +207,7 @@
                                                     <div class="mb-3">
                                                         <label for="to_email" class="form-label">Email</label>
                                                         <input type="text" name="to_email" id="to_email" class="form-control form-control-lg">
+                                                        <span class="error text-danger"></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -196,7 +215,7 @@
                                             
                                             <div class="mb-3">
                                                 <label class="form-check form-check-inline">
-                                                    <input class="form-check-input" name="to_save_to_address_book" id="to_save_to_address_book" type="checkbox" value="save">
+                                                    <input class="form-check-input" name="to_save_to_address_book" id="to_save_to_address_book" type="checkbox">
                                                     <span class="form-check-label">
                                                       Save to address book
                                                     </span>
@@ -297,30 +316,35 @@
                                                 <div class="mb-3">
                                                     <label for="weight" class="form-label">Weight <span class="text-danger">*</span></label>
                                                     <input type="text" name="weight" id="weight" class="form-control form-control-lg" placeholder="Round upto nearest pound">
+                                                    <span class="error text-danger"></span>
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-xxl-3">
                                                 <div class="mb-3">
                                                     <label for="length" class="form-label">Length <span class="text-danger">*</span></label>
                                                     <input type="text" name="length" id="length" class="form-control form-control-lg" placeholder="Round upto nearest inch">
+                                                    <span class="error text-danger"></span>
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-xxl-3">
                                                 <div class="mb-3">
                                                     <label for="width" class="form-label">Width <span class="text-danger">*</span></label>
                                                     <input type="text" name="width" id="width" class="form-control form-control-lg" placeholder="Round upto nearest inch">
+                                                    <span class="error text-danger"></span>
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-xxl-3">
                                                 <div class="mb-3">
                                                     <label for="height" class="form-label">Height <span class="text-danger">*</span></label>
                                                     <input type="text" name="height" id="height" class="form-control form-control-lg" placeholder="Round upto nearest inch">
+                                                    <span class="error text-danger"></span>
                                                 </div>
                                             </div>
                                             <div class="col-xl-12 col-xxl-12">
                                                 <div class="mb-3">
                                                     <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
                                                     <input type="text" name="description" id="description" class="form-control form-control-lg" placeholder="">
+                                                    <span class="error text-danger"></span>
                                                 </div>
                                             </div>
 
@@ -338,6 +362,36 @@
                     </div>
                 </div>
             </div>
+        </form>
+
+        <form id="form-2" action="#" method="post" style="display: none;">
+            <div class="row">
+                <div class="col-xl-6 col-xxl-6 d-flex">
+                    <div class="w-100">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col mt-0">
+                                        <h5 class="card-title">From</h5>
+                                    </div>
+
+                                    <div class="col-auto">
+                                        <div class="stat text-primary">
+                                            <i class="align-middle" data-feather="truck"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="row">
+                                    <div class="col" id="confirm_from_address_container">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </form>
     </div>
 </main>

@@ -391,4 +391,179 @@ class FedExService
         }
     }
 
+    public function fedexAddressValidation($from,$to){
+        $token = $this->token();
+        if($token['success']){
+            $tok = $token['response']['access_token'];
+            $headers = [
+                'Content-Type: application/json',
+                'Accept: application/json',
+                'Authorization: Bearer '.$tok,
+                'X-locale: en_US',
+                'Pragma: no-cache',
+                'Cache-Control: no-cache, no-store'
+            ];
+
+            $payload = [
+              
+                "addressesToValidate" => [
+                    [
+                        "address" => [
+                            "streetLines" => $from['streets'], 
+                            "city" => $from['city'], 
+                            "stateOrProvinceCode" => $from['state'], 
+                            "postalCode" => $from['zipcode'], 
+                            "countryCode" => "US" 
+                        ] 
+                    ],
+                    [
+                        "address" => [
+                            "streetLines" => $to['streets'], 
+                            "city" => $to['city'], 
+                            "stateOrProvinceCode" => $to['state'], 
+                            "postalCode" => $to['zipcode'], 
+                            "countryCode" => "US" 
+                        ] 
+                    ] 
+                ] 
+            ]; 
+            
+           
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $this->baseUrl.'/address/v1/addresses/resolve');
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); // Added this on local system to avoid SSL error
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // Added this on local system to avoid SSL error
+            curl_setopt($ch, CURLOPT_ENCODING, "gzip"); // Added this to decode the response            
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+            
+            $output         =   curl_exec($ch);
+            $http_status    =   curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $content_type   =   curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+            $curlerr        =   curl_error($ch);
+            $header_out     =   curl_getinfo($ch);
+            
+            curl_close($ch);
+
+            if($http_status == 200){
+
+                $out  = json_decode($output,true);
+                return [
+                    'status_code'=>$http_status,
+                    'response'=>$out
+                ];
+
+            }else{
+                return [
+                    'status_code'=>$http_status,
+                    'response'=>$output,
+                    'header'=>$header_out,
+                    'msg'=> 'Error from the api'                     
+                ];
+            }
+
+
+            // echo "<pre>"; print_r(json_decode($output)); die;
+            // echo "OUTPUT: ".$output."<br><br>";
+            // echo "HTTP STATUS: ".$http_status."<br><br>";
+            // echo "CONTENT TYPE: ".$content_type."<br><br>";
+            // echo "ERROR: ".$curlerr."<br><br>";
+            // die();
+        }else{
+
+            return [
+                'status_code'=>201,
+                'msg'=>'Invalid APi Token'
+            ];
+        }
+    }
+
+    public function fedexServiceAvailability(){
+        $token = $this->token();
+        if($token['success']){
+            $tok = $token['response']['access_token'];
+            $headers = [
+                'Content-Type: application/json',
+                'Accept: application/json',
+                'Authorization: Bearer '.$tok,
+                'X-locale: en_US',
+                'Pragma: no-cache',
+                'Cache-Control: no-cache, no-store'
+            ];
+
+            $payload = [
+              
+                "addressesToValidate" => [
+                    [
+                        "address" => [
+                            "streetLines" => [
+                               "NA", 
+                            ], 
+                            "city" => "NA", 
+                            "stateOrProvinceCode" => "NA", 
+                            "postalCode" => "90", 
+                            "countryCode" => "US" 
+                        ] 
+                    ] 
+                ] 
+            ]; 
+            
+           
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $this->baseUrl.'/address/v1/addresses/resolve');
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); // Added this on local system to avoid SSL error
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // Added this on local system to avoid SSL error
+            curl_setopt($ch, CURLOPT_ENCODING, "gzip"); // Added this to decode the response            
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+            
+            $output         =   curl_exec($ch);
+            $http_status    =   curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $content_type   =   curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+            $curlerr        =   curl_error($ch);
+            $header_out     =   curl_getinfo($ch);
+            
+            curl_close($ch);
+
+            // if($http_status == 200){
+
+            //     $out  = json_decode($output,true);
+            //     return [
+            //         'status_code'=>$http_status,
+            //         'response'=>$out
+            //     ];
+
+            // }else{
+            //     return [
+            //         'status_code'=>$http_status,
+            //         'response'=>$output,
+            //         'header'=>$header_out,
+            //         'msg'=> 'Error from the api'                     
+            //     ];
+            // }
+
+
+            echo "<pre>"; print_r(json_decode($output)); die;
+            echo "OUTPUT: ".$output."<br><br>";
+            echo "HTTP STATUS: ".$http_status."<br><br>";
+            echo "CONTENT TYPE: ".$content_type."<br><br>";
+            echo "ERROR: ".$curlerr."<br><br>";
+            die();
+        }else{
+
+            return [
+                'status_code'=>201,
+                'msg'=>'Invalid APi Token'
+            ];
+        }
+    }
+
 }

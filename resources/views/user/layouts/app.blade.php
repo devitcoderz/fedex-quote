@@ -19,6 +19,7 @@
 
 	<link href="{{asset('backoffice/css/app.css')}}" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="{{asset('notification/toastr/toastr.min.css')}}">
     @yield('styles')
 </head>
 
@@ -37,6 +38,7 @@
 
 	<script src="{{asset('backoffice/js/app.js')}}"></script>
 	<script src="{{asset('backoffice/lib/jquery-3.1.1.js')}}"></script>
+	<script src="{{asset('notification/toastr/toastr.min.js')}}"></script>
     <script>
     $(document).ready(function(){
         $.ajaxSetup({
