@@ -19,6 +19,7 @@
 
 	<link href="{{asset('backoffice/css/app.css')}}" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="{{asset('notification/toastr/toastr.min.css')}}">
     @yield('styles')
 </head>
 
@@ -36,10 +37,10 @@
 	</div>
 
 	<script src="{{asset('backoffice/js/app.js')}}"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<script src="{{asset('backoffice/lib/jquery-3.1.1.js')}}"></script>
+	<script src="{{asset('notification/toastr/toastr.min.js')}}"></script>
     <script>
     $(document).ready(function(){
-        alert("ok");
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -47,9 +48,7 @@
         });
     })
     </script>
-    @yield('scripts')
-
-	
+    @yield('scripts')	
 </body>
 
 </html>

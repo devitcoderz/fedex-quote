@@ -6,8 +6,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Auth\AuthenticationController;
 
-use App\Http\Controllers\User\DashboardController as UserDashboardController;
-use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\User\DashboardController;
+use App\Http\Controllers\User\BookShipmentController;
+
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -35,8 +36,11 @@ Route::middleware(['auth','auth.admin'])->prefix('admin')->name('admin.')->group
 });
 
 Route::middleware(['auth','auth.user'])->prefix('user')->name('user.')->group(function () {
-    Route::get('/',function(){
-        return view('user.dashboard');
-    })->name('dashboard');
+    Route::get('/', [DashboardController::class,'index'])->name('dashboard');
+    
+    Route::get('/shipment/book', [BookShipmentController::class,'book_shipment'])->name('shipment.book');
+    Route::post('/shipment/book/validation/ajax', [BookShipmentController::class,'book_shipment_validation_ajax'])->name('shipment.book.validation.ajax');
+    Route::get('get/fedex-location-by-zipcode/ajax',[BookShipmentController::class,'get_fedex_location_by_zipcode_ajax'])->name('get.fedex-location-by-zipcode.ajax');
+    Route::get('/test', [BookShipmentController::class,'test'])->name('test');
 });
 
