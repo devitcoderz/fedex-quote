@@ -1,5 +1,9 @@
 <script>
 $(document).ready(function(){
+    var from = {};
+    var to = {}
+    var package = {};
+    var shipping = {};
     $(document).on("change",'input[name="to_address_type"]',function(){
         var addrType = $('input[name="to_address_type"]:checked').val()
         
@@ -128,13 +132,13 @@ $(document).ready(function(){
     })
     
     
+    
     $(document).on("click","#btn-get-rates",function(){
         $(".error").html('')
-
-        var from = {};
-        var to = {}
-        var package = {};
         
+        var btnRates = $(this);
+        btnRates.html("loading...");
+
         from.address_type = $('input[name="from_address_type"]:checked').val();
         from.first_name = $("#from_first_name").val()
         from.last_name = $("#from_last_name").val()
@@ -173,8 +177,13 @@ $(document).ready(function(){
             to.email = $("#fedex_email").val();
 
             to.street_1 = $("#facility").find(':selected').data('street_1');
+            to.street_2 = $("#facility").find(':selected').data('street_2');
             to.city = $("#facility").find(':selected').data('city');
             to.state = $("#facility").find(':selected').data('state');
+            var contact = $("#facility").find(':selected').data('contact');
+
+            to.company = contact.companyName;
+
         }
 
        
@@ -184,6 +193,7 @@ $(document).ready(function(){
         package.width = $("#width").val();
         package.height = $("#height").val();
         package.description = $("#description").val();
+        package.shipment_date = $("#shipment_date").val();
 
 
         $.ajax({
@@ -199,16 +209,44 @@ $(document).ready(function(){
                 console.log(response)
                 if(response.code == 200){ // success
                     console.log(response)
-                    if(response.response[0].customerMessages){
+                    // if (response.response[0] &&
+                    //     response.response[0].customerMessages[0] &&
+                    //     response.response[0].customerMessages[0].code & 
+                    //     response.response[0].customerMessages[0].code == 'STANDARDIZED.ADDRESS.NOTFOUND') {
+                    //         toastr.error("From address not found");
+                    //         return false;
+                      
+                    // }
 
-                    }
+                    // if (response.response[1] &&
+                    //     response.response[1].customerMessages[0] &&
+                    //     response.response[1].customerMessages[0].code & 
+                    //     response.response[1].customerMessages[0].code == 'STANDARDIZED.ADDRESS.NOTFOUND') {
+                    //         toastr.error("To address not found");
+                    //         return false;
+                      
+                    // }
+                    
+
                     var from_address = from.street_1+" "+from.city+", "+from.state+", "+from.zipcode;
                     $("#confirm_from_address_container").html(`
                     <div class="mb-3">
                         <label class="form-check form-check-inline">
-                            <input class="form-check-input" checked type="radio"  name="confirm_from_address" id="confirm_from_address"  value="new">
+                            <input class="form-check-input" checked type="radio"  name="confirm_from_address" id="confirm_from_address"  value="from">
                             <span class="form-check-label" id="confirm_from_address_text">
                                 `+from_address+`
+                            </span>
+                        </label>
+                    </div>
+                    `);
+
+                    var to_address = to.street_1+" "+to.city+", "+to.state+", "+to.zipcode;
+                    $("#confirm_to_address_container").html(`
+                    <div class="mb-3">
+                        <label class="form-check form-check-inline">
+                            <input class="form-check-input" checked type="radio"  name="confirm_to_address" id="confirm_to_address"  value="to">
+                            <span class="form-check-label" id="confirm_to_address_text">
+                                `+to_address+`
                             </span>
                         </label>
                     </div>
@@ -248,10 +286,21 @@ $(document).ready(function(){
                         })
                     }
                 }else if(response.code == 201){ // toast erros
-                    // toastr.error(result.error)
+                    console.log('address validation api error')
+                    console.log(response.response)
+                    if(response.response.errors){
+                        $.each(response.response.errors,function(i,e){
+                            if(e.code){
+                                toastr.error(e.message)
+                            }
+                        })
+                    }
+                   
                 }else{ //  unknow code
                     // toastr.error("Unknown Code");
                 }
+
+                btnRates.html("Get Rates")
             },
             error:function(err,errI){
                 console.log(err)
@@ -259,6 +308,165 @@ $(document).ready(function(){
             }
         })
 
+    })
+
+    function changeDateFormat(date){
+        // const dateStr = '2024-09-10T08:00:00';
+        const dateStr = date;
+        const dateObj = new Date(dateStr);
+
+        // Define options for formatting
+        const options = {
+        weekday: 'long', // "Tuesday"
+        year: 'numeric', // "2024"
+        month: 'short', // "Sep"
+        day: 'numeric', // "10"
+        hour: 'numeric', // "10"
+        minute: 'numeric', // "30"
+        hour12: true, // "AM/PM"
+        };
+
+        // Format the date according to the options
+        const formattedDate = dateObj.toLocaleString('en-US', options);
+        return formattedDate;
+        // console.log(formattedDate); // Example output: "Tuesday, Sep 10, 2024, 8:00 AM"
+
+    }
+
+    $(document).on("click","#btn-confirm-address",function(){
+
+        $.ajax({
+            url:"{{route('user.shipment.book.rates-and-transit-times.ajax')}}",
+            type:"post",
+            data:{
+                from:from,
+                to:to,
+                package:package
+            },
+            success:function(response){
+                console.log(response)
+                if(response.code == 200){ // success
+                    console.log("RATE FETCH API SUCCESS")
+                    console.log(response)
+                    var ratesHtml = '';
+                    $.each(response.response,function(i,e){
+                        var dateToDisplay = changeDateFormat(e.commit.dateDetail.dayFormat);
+                        ratesHtml += `
+                        <tr>
+                            <td>
+                                <div class="mb-3">
+                                    <label class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio"  name="service_type" id="service_type_`+i+`" data-total-amount="`+e.ratedShipmentDetails[0].totalNetFedExCharge+`"  value="`+e.serviceType+`">
+                                        <span class="form-check-label">
+                                            <b>`+e.serviceName+`</b> <br>Arriving `+dateToDisplay+`
+                                        </span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td><b>`+e.ratedShipmentDetails[0].totalNetCharge+`</b><br><small>Retail</small></td>
+                            <td><b class="text-danger">`+e.ratedShipmentDetails[0].totalDiscounts+`</b><br><small>You Save</small></td>
+                            <td><b class="text-success">`+e.ratedShipmentDetails[0].totalNetFedExCharge+`</b><br><small>Your Cost</small></td>
+                        </tr>
+                        `;
+                    });
+
+                    
+                    $("#rates-table tbody").html(ratesHtml)
+                    $("#display_from_name").html(from.first_name + " "+from.last_name);
+                    $("#display_from_company").html(from.company);
+                    $("#display_from_street").html(from.street_1);
+                    $("#display_from_city_state_zipcode").html(from.city+", "+from.state+", "+from.zipcode);
+
+                    $("#display_to_name").html(to.first_name + " "+to.last_name);
+                    $("#display_to_company").html(to.company);
+                    $("#display_to_street").html(to.street_1);
+                    $("#display_to_city_state_zipcode").html(to.city+", "+to.state+", "+to.zipcode);
+
+                    $("#display_pkg_description").html(package.description);
+                    $("#display_pkg_dimention").html(package.length+"X"+package.width+"X"+package.height);
+                    $("#display_pkg_weight").html(package.weight);
+
+                    $("#form-2").hide();
+                    $("#form-3").show();
+                   
+                }else if(response.code == 202){ // form erros
+                    console.log(response.errors)
+                    toastr.error(response.msg);
+                   
+                }else if(response.code == 201){ // toast erros
+                    console.log('Rate Fetch API ERROR')
+                    console.log(response.response)
+                    if(response.response.errors){
+                        $.each(response.response.errors,function(i,e){
+                            if(e.code){
+                                toastr.error(e.message)
+                            }
+                        })
+                    }
+                   
+                }else{ //  unknow code
+                    console.log('unknown code')
+                    console.log(response)
+                    // toastr.error("Unknown Code");
+                }
+
+            },
+            error:function(err,errI){
+                console.log(err)
+                console.log(errI)
+            }
+        })
+    })
+    
+
+    $(document).on("click","#btn-continue-to-checkout",function(){
+        shipping.service_type = $('input[name="service_type"]:checked').val();
+        shipping.amount = $('input[name="service_type"]:checked').data('total-amount')
+        
+        $.ajax({
+            url:"{{route('user.shipment.book.checkout.ajax')}}",
+            type:"post",
+            data:{
+                from:from,
+                to:to,
+                package:package,
+                shipping:shipping
+            },
+            success:function(response){
+                console.log(response)
+                if(response.code == 200){ // success
+                    console.log("BOOK CHECKOUT SUCCESS")
+                    console.log(response)
+
+                    window.location.href = response.redirect;
+                    
+                }else if(response.code == 202){ // form erros
+                    console.log(response.errors)
+                    toastr.error(response.msg);
+                   
+                }else if(response.code == 201){ // toast erros
+                    console.log('BOOK CHECKOUT ERROR')
+                    console.log(response.response)
+                    // if(response.response.errors){
+                    //     $.each(response.response.errors,function(i,e){
+                    //         if(e.code){
+                    //             toastr.error(e.message)
+                    //         }
+                    //     })
+                    // }
+                   
+                }else{ //  unknow code
+                    console.log('unknown code')
+                    console.log(response)
+                    // toastr.error("Unknown Code");
+                }
+
+            },
+            error:function(err,errI){
+                console.log(err)
+                console.log(errI)
+            }
+        })
     })
 })
 </script>

@@ -366,6 +366,33 @@
 
         <form id="form-2" action="#" method="post" style="display: none;">
             <div class="row">
+                <div class="col-xl-12 col-xxl-12 d-flex">
+                    <div class="w-100">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col mt-0">
+                                        <h5 class="card-title">Address Confirmation</h5>
+                                    </div>
+
+                                    <div class="col-auto">
+                                        <div class="stat text-primary">
+                                            <i class="align-middle" data-feather="warning"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mt-3">
+                                            <button class="btn btn-info" type="button" id="btn-confirm-address" style="float: right">Continue with these addresses</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-xl-6 col-xxl-6 d-flex">
                     <div class="w-100">
                         <div class="card">
@@ -390,8 +417,191 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-xl-6 col-xxl-6 d-flex">
+                    <div class="w-100">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col mt-0">
+                                        <h5 class="card-title">To</h5>
+                                    </div>
+
+                                    <div class="col-auto">
+                                        <div class="stat text-primary">
+                                            <i class="align-middle" data-feather="truck"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="row">
+                                    <div class="col" id="confirm_to_address_container">
+                                    </div>
+                                </div>
+
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+               
             </div>
             
+        </form>
+
+        <form id="form-3" action="" method="POST" style="display: none;">
+            <div class="row">
+                <div class="col-xl-4 col-xxl-4 d-flex">
+                    <div class="w-100">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col mt-0">
+                                        <h5 class="card-title">From</h5>
+                                    </div>
+
+                                    <div class="row mt-2">
+                                        <div class="col" style="line-height: 0.5rem;s">
+                                            <p id="display_from_name">First Last Name</p>
+                                            <p id="display_from_company">Company</p>
+                                            <p id="display_from_street">Street</p>
+                                            <p id="display_from_city_state_zipcode">City,ST,88099</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-xxl-4 d-flex">
+                    <div class="w-100">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col mt-0">
+                                        <h5 class="card-title">To</h5>
+                                    </div>
+
+                                    <div class="row mt-2">
+                                        <div class="col" style="line-height: 0.5rem;s">
+                                            <p id="display_to_name">First Last Name</p>
+                                            <p id="display_to_company">Company</p>
+                                            <p id="display_to_street">Street</p>
+                                            <p id="display_to_city_state_zipcode">City,ST,88099</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-xxl-4 d-flex">
+                    <div class="w-100">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col mt-0">
+                                        <h5 class="card-title">Package</h5>
+                                    </div>
+
+                                    <div class="row mt-2">
+                                        <div class="col" style="line-height: 0.5rem;s">
+                                            <p id="display_pkg_description">Description</p>
+                                            <p id="display_pkg_dimention">Company</p>
+                                            <p id="display_pkg_weight">Street</p>
+                                            <p>&nbsp;</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-12 col-xxl-12 d-flex">
+                    <div class="w-100">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col mt-0">
+                                        <h5 class="card-title">Services</h5>
+                                    </div>
+
+                                    <div class="col-auto">
+                                        Selected Ship Date: Monday Sep 09, 2024
+                                        
+                                    </div>
+                                </div>
+
+                                <div class="row mt-2">
+                                    <div class="col" style="line-height: 1rem;">
+                                        <table class="table" id="rates-table">
+                                           <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <div class="mb-3">
+                                                            <label class="form-check form-check-inline">
+                                                                <input class="form-check-input" checked type="radio"  name="from_address_type" id="from_address_type"  value="new">
+                                                                <span class="form-check-label">
+                                                                  <b>Priority Overnight</b> <br>Arriving Tuesday Sep 10, 2024 10:30AM
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td><b>114.60</b><br><small>Retail</small></td>
+                                                    <td><b class="text-danger">75.60</b><br><small>You Save</small></td>
+                                                    <td><b class="text-success">114.60</b><br><small>Your Cost</small></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="mb-3">
+                                                            <label class="form-check form-check-inline">
+                                                                <input class="form-check-input"  type="radio"  name="from_address_type" id="from_address_type"  value="new">
+                                                                <span class="form-check-label">
+                                                                  <b>Priority Overnight</b> <br>Arriving Tuesday Sep 10, 2024 10:30AM
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td><b>114.60</b><br><small>Retail</small></td>
+                                                    <td><b class="text-danger">75.60</b><br><small>You Save</small></td>
+                                                    <td><b class="text-success">114.60</b><br><small>Your Cost</small></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="mb-3">
+                                                            <label class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio"  name="from_address_type" id="from_address_type"  value="new">
+                                                                <span class="form-check-label">
+                                                                  <b>Priority Overnight</b> <br>Arriving Tuesday Sep 10, 2024 10:30AM
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td><b>114.60</b><br><small>Retail</small></td>
+                                                    <td><b class="text-danger">75.60</b><br><small>You Save</small></td>
+                                                    <td><b class="text-success">114.60</b><br><small>Your Cost</small></td>
+                                                </tr>
+                                           </tbody>
+                                           <tfoot>
+                                            <tr>
+                                                <td colspan="4">
+                                                    <button type="button" id="btn-continue-to-checkout" class="btn btn-success">Continue to checkout</button>
+                                                </td>
+                                            </tr>
+                                           </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 </main>
