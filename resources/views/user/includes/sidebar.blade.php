@@ -21,6 +21,9 @@
                 <a class="sidebar-link" href="{{route("user.shipment.book")}}">
                     <i class="align-middle" data-feather="shopping-cart"></i> <span class="align-middle">Book</span>
                 </a>
+                <a class="sidebar-link" href="{{route("user.shipment.orders")}}">
+                    <i class="align-middle" data-feather="shopping-cart"></i> <span class="align-middle">Orders</span>
+                </a>
             </li>
 
         </ul>

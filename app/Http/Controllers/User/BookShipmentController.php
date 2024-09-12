@@ -432,7 +432,7 @@ class BookShipmentController extends Controller
 
                     $updated = Order::where("id",$order->id)->update($update_order);
                     if($updated){
-                        return redirect()->route('user.orders')->with("success",['Shipping label created. you can download you shipping lable.']);
+                        return redirect()->route('user.shipment.orders')->with("success",['Shipping label created. you can download you shipping lable.']);
                     }else{
                         return redirect()->route('user.checkout')->with("error",['Something went wrong with updating order']);
                     }
@@ -449,5 +449,11 @@ class BookShipmentController extends Controller
         }else{
             return redirect()->route('user.checkout')->with("error",['Payment Failed']);
         }
+    }
+
+    public function shipment_orders(){
+        $user_id = Auth::user()->id;
+        $orders = Order::where("user_id",$user_id)->orderBy("id","desc")->get()->toArray();
+        return view("user.shipment.orders",compact('orders'));
     }
 }
