@@ -27,4 +27,8 @@ class Order extends Model
         'fedex_master_tracking_number','fedex_ship_datestamp','fedex_service_name','fedex_service_category',
         'fedex_delivery_datestamp','fedex_carrier_code','fedex_image_type','fedex_image','fedex_status_code',"fedex_response",
     ];
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

@@ -37,12 +37,14 @@ Route::middleware(['auth','auth.admin'])->prefix('admin')->name('admin.')->group
 
 Route::middleware(['auth','auth.user'])->prefix('user')->name('user.')->group(function () {
     Route::get('/', [DashboardController::class,'index'])->name('dashboard');
-    
+   
+        
     Route::get('/shipment/book', [BookShipmentController::class,'book_shipment'])->name('shipment.book');
     Route::post('/shipment/book/validation/ajax', [BookShipmentController::class,'book_shipment_validation_ajax'])->name('shipment.book.validation.ajax');
     Route::get('get/fedex-location-by-zipcode/ajax',[BookShipmentController::class,'get_fedex_location_by_zipcode_ajax'])->name('get.fedex-location-by-zipcode.ajax');
     Route::post('/shipment/book/rates-and-transit-times/ajax',[BookShipmentController::class,'rates_and_transit_times_ajax'])->name('shipment.book.rates-and-transit-times.ajax');
     Route::post('/shipment/book/checkout/ajax',[BookShipmentController::class,'book_checkout_ajax'])->name('shipment.book.checkout.ajax');
+    Route::get('shipment/orders',[BookShipmentController::class,'shipment_orders'])->name('shipment.orders');
 
     Route::get("/checkout",[BookShipmentController::class,'checkout'])->name("checkout");
     Route::post("/checkout",[BookShipmentController::class,'checkout_submit'])->name("checkout.submit");
