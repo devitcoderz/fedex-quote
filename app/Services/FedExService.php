@@ -171,8 +171,17 @@ class FedExService
         }
     }
 
-    public function fedexShipping(){
-        
+    public function fedexShipping($from,$to,$package,$shipping){
+        $from_addr_lines[] = $from['street_1'];
+        if(isset($from['street_2']) && !empty($from['street_2'])):
+        $from_addr_lines[] = $from['street_2'];
+        endif;
+
+        $to_addr_lines[] = $to['street_1'];
+        if(isset($to['street_2']) && !empty($to['street_2'])):
+        $to_addr_lines[] = $to['street_2'];
+        endif;
+
         $token = $this->token();
         if($token['success']){
             $tok = $token['response']['access_token'];
@@ -190,41 +199,41 @@ class FedExService
                 "requestedShipment" => [
                     "shipper" => [
                         "contact" => [
-                            "personName" => "SHIPPER NAME", 
-                            "phoneNumber" => 1234567890, 
-                            "companyName" => "Shipper Company Name" 
+                            "personName" => $from['first_name']." ".$from['last_name'], 
+                            "phoneNumber" => $from['phone_number'], 
+                            "companyName" => $from['company'] 
                         ], 
                         "address" => [
                             "streetLines" => [
                                 "SHIPPER STREET LINE 1" 
                             ], 
-                            "city" => "HARRISON", 
-                            "stateOrProvinceCode" => "AR", 
-                            "postalCode" => 72601, 
+                            "city" => $from['city'], 
+                            "stateOrProvinceCode" => $from['state'], 
+                            "postalCode" => $from['zipcode'], 
                             "countryCode" => "US" 
                         ] 
                     ], 
                     "recipients" => [
                         [
                             "contact" => [
-                                "personName" => "Aftab", 
-                                "phoneNumber" => 1234567890, 
-                                "companyName" => "Recipient Company Name" 
+                               "personName" => $to['first_name']." ".$to['last_name'], 
+                                "phoneNumber" => $to['phone_number'], 
+                                "companyName" => $to['company'] 
                             ], 
                             "address" => [
                                 "streetLines" => [
                                     "RECIPIENT STREET LINE 1", 
                                     "RECIPIENT STREET LINE 2" 
                                 ], 
-                                "city" => "Collierville", 
-                                "stateOrProvinceCode" => "TN", 
-                                "postalCode" => 38017, 
+                                "city" => $to['city'], 
+                                "stateOrProvinceCode" => $to['state'], 
+                                "postalCode" => $to['zipcode'], 
                                 "countryCode" => "US" 
                             ] 
                         ] 
                     ], 
-                    "shipDatestamp" => "2020-07-03", 
-                    "serviceType" => "PRIORITY_OVERNIGHT", 
+                    "shipDatestamp" => $package['shipment_date'], 
+                    "serviceType" => $shipping['service_type'], //'PRIORITY_OVERNIGHT', 
                     "packagingType" => "FEDEX_ENVELOPE", 
                     "pickupType" => "USE_SCHEDULED_PICKUP", 
                     "blockInsightVisibility" => false, 
@@ -240,16 +249,25 @@ class FedExService
                         ] 
                     ], 
                     "labelSpecification" => [
-                        "imageType" => "PDF", 
-                        "labelStockType" => "PAPER_85X11_TOP_HALF_LABEL" 
+                        "imageType" => "PNG", //PNG PDF 
+                        "labelStockType" => "PAPER_4X6" 
                     ], 
                     "requestedPackageLineItems" => [
                         [
                             "weight" => [
-                                "value" => 1, 
-                                "units" => "LB" 
-                            ] 
-                        ] 
+                                "value" => $package['weight'], 
+                                "units" => "KB" 
+                            ],
+                            // "dimensions"=>[
+                            //     'length'=>2,
+                            //     'width'=>2,
+                            //     'height'=>2,
+                            //     'units'=>'IN'
+                            // ],
+                           
+
+                        ],
+                         
                     ] 
                  ], 
                 "accountNumber" => [
@@ -279,13 +297,27 @@ class FedExService
             curl_close($ch);
 
             $out  = json_decode($output,true);
-            echo "<pre>"; print_r($out); die;
+            if($http_status == 200){
+                return [
+                    'status_code'=>$http_status,
+                    'response'=>$out
+                ];
 
-            echo "OUTPUT: ".$output."<br><br>";
-            echo "HTTP STATUS: ".$http_status."<br><br>";
-            echo "CONTENT TYPE: ".$content_type."<br><br>";
-            echo "ERROR: ".$curlerr."<br><br>";
-            die();
+            }else{
+                return [
+                    'status_code'=>$http_status,
+                    'response'=>$out,
+                    'header'=>$header_out,
+                    'msg'=> 'Error from the api'                     
+                ];
+            }
+
+           
+            // echo "OUTPUT: ".$output."<br><br>";
+            // echo "HTTP STATUS: ".$http_status."<br><br>";
+            // echo "CONTENT TYPE: ".$content_type."<br><br>";
+            // echo "ERROR: ".$curlerr."<br><br>";
+            // die();
         }else{
             dd("invalid token");
         }
@@ -458,9 +490,11 @@ class FedExService
                 ];
 
             }else{
+
+                $out = json_decode($output,true);
                 return [
                     'status_code'=>$http_status,
-                    'response'=>$output,
+                    'response'=>$out,
                     'header'=>$header_out,
                     'msg'=> 'Error from the api'                     
                 ];
@@ -557,6 +591,117 @@ class FedExService
             echo "CONTENT TYPE: ".$content_type."<br><br>";
             echo "ERROR: ".$curlerr."<br><br>";
             die();
+        }else{
+
+            return [
+                'status_code'=>201,
+                'msg'=>'Invalid APi Token'
+            ];
+        }
+    }
+
+    public function fedexRatesAndTransitTimes($from,$to,$package){
+        $token = $this->token();
+        if($token['success']){
+            $tok = $token['response']['access_token'];
+            $headers = [
+                'Content-Type: application/json',
+                'Accept: application/json',
+                'Authorization: Bearer '.$tok,
+                'X-locale: en_US',
+                'Pragma: no-cache',
+                'Cache-Control: no-cache, no-store'
+            ];
+
+            $payload = [
+                'accountNumber' =>[
+                    'value' => $this->accountNumber,
+                ],
+                'rateRequestControlParameters'=>[
+                    'returnTransitTimes'=>true
+                ],
+                'requestedShipment' =>[
+                    'shipper' =>[
+                        'address' =>[
+                            'city'=>$from['city'],
+                            'stateOrProvinceCode'=>$from['state'],
+                            'postalCode' => $from['zipcode'],
+                            'countryCode' => 'US',
+                        ],
+                    ],
+                    'recipient' =>[
+                        'address' =>[ 
+                            'city'=>$to['city'],
+                            'stateOrProvinceCode'=>$to['state'],
+                            'postalCode' => $to['zipcode'],
+                            'countryCode' => 'US',
+                        ],
+                    ],
+                    'pickupType' => 'DROPOFF_AT_FEDEX_LOCATION',
+                    'rateRequestType' =>[
+                        'ACCOUNT',
+                        'LIST',
+                    ],
+                    'requestedPackageLineItems' => [
+                        [
+                            'weight' => [
+                                'units' => 'KG',
+                                'value' => $package['weight'],
+                            ],
+                            'dimensions'=>[
+                                'length'=>$package['length'],
+                                'width'=>$package['width'],
+                                'height'=>$package['height'],
+                                'units'=>'IN', //CM IN
+                            ]
+                        ],
+                    ],
+                ],
+            ];
+            
+           
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $this->baseUrl.'/rate/v1/rates/quotes');
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); // Added this on local system to avoid SSL error
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // Added this on local system to avoid SSL error
+            curl_setopt($ch, CURLOPT_ENCODING, "gzip"); // Added this to decode the response            
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+            
+            $output         =   curl_exec($ch);
+            $http_status    =   curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $content_type   =   curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+            $curlerr        =   curl_error($ch);
+            $header_out     =   curl_getinfo($ch);
+            
+            curl_close($ch);
+            $out  = json_decode($output,true);
+            if($http_status == 200){
+                return [
+                    'status_code'=>$http_status,
+                    'response'=>$out
+                ];
+
+            }else{
+                return [
+                    'status_code'=>$http_status,
+                    'response'=>$out,
+                    'header'=>$header_out,
+                    'msg'=> 'Error from the api'                     
+                ];
+            }
+
+
+            // echo "<pre>"; print_r(json_decode($output)); die;
+            // echo "OUTPUT: ".$output."<br><br>";
+            // echo "HTTP STATUS: ".$http_status."<br><br>";
+            // echo "CONTENT TYPE: ".$content_type."<br><br>";
+            // echo "ERROR: ".$curlerr."<br><br>";
+            // die();
         }else{
 
             return [

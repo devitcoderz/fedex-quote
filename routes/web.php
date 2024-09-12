@@ -14,10 +14,10 @@ use App\Http\Controllers\User\BookShipmentController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/quick-quote', [HomeController::class, 'getQuickQuote'])->name('home.quick-quote.get');
 
-// Route::get('/payment', function () {
-//     return view('payment');
-// });
-// Route::post('/charge', [PaymentController::class, 'charge'])->name('charge');
+Route::get('/payment', function () {
+    return view('payment');
+});
+Route::post('/charge', [PaymentController::class, 'charge'])->name('charge');
 
 Route::get("/logout",[AuthenticationController::class,'logout'])->name("logout");
 
@@ -41,6 +41,12 @@ Route::middleware(['auth','auth.user'])->prefix('user')->name('user.')->group(fu
     Route::get('/shipment/book', [BookShipmentController::class,'book_shipment'])->name('shipment.book');
     Route::post('/shipment/book/validation/ajax', [BookShipmentController::class,'book_shipment_validation_ajax'])->name('shipment.book.validation.ajax');
     Route::get('get/fedex-location-by-zipcode/ajax',[BookShipmentController::class,'get_fedex_location_by_zipcode_ajax'])->name('get.fedex-location-by-zipcode.ajax');
+    Route::post('/shipment/book/rates-and-transit-times/ajax',[BookShipmentController::class,'rates_and_transit_times_ajax'])->name('shipment.book.rates-and-transit-times.ajax');
+    Route::post('/shipment/book/checkout/ajax',[BookShipmentController::class,'book_checkout_ajax'])->name('shipment.book.checkout.ajax');
+
+    Route::get("/checkout",[BookShipmentController::class,'checkout'])->name("checkout");
+    Route::post("/checkout",[BookShipmentController::class,'checkout_submit'])->name("checkout.submit");
     Route::get('/test', [BookShipmentController::class,'test'])->name('test');
+
 });
 
