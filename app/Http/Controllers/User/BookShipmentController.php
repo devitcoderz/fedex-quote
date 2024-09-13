@@ -43,7 +43,7 @@ class BookShipmentController extends Controller
     
     public function test(FedExService $fedex){
         // return $fedex->fedexShipping();
-        $response =  $fedex->fedexLocationByPincode("90630");
+        $response =  $fedex->fedexLocationByPincode("10003");
         echo "<pre>"; print_r($response); die;
         // $from = [
         //     'streets' => [
@@ -120,6 +120,7 @@ class BookShipmentController extends Controller
                 'last_name' => 'required|string',
                 'street_1' => 'required|string',
                 'city' => 'required|string',
+                'state' => 'required|string',
                 'zipcode' => 'required|numeric|min:5',
                 'phone_number' => 'required|numeric|min:10',
                 'company'=>'required|min:5',
@@ -136,6 +137,7 @@ class BookShipmentController extends Controller
                 'last_name' => 'required|string',
                 'street_1' => 'required|string',
                 'city' => 'required|string',
+                'state' => 'required|string',
                 'zipcode' => 'required|numeric|min:5',
                 'phone_number' => 'required|numeric|min:10',
                 'company'=>'required|min:5',

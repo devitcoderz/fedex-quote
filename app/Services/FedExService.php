@@ -358,9 +358,14 @@ class FedExService
                     'criteria'=>'DISTANCE',
                     'order'=>'ASCENDING'
                 ],
+                'locationTypes'=>[
+                    'FEDEX_OFFICE',
+                ],
                 // 'locationCapabilities'=>[
                 //     [
-                //         'transferOfPossessionType'=>'DROPOFF'
+                //         'daysOfWeek'=>[
+                //             "MON","TUE","WED","THU","FRI","SAT","SUN"
+                //         ]
                 //     ]
                 // ]
             ]; 

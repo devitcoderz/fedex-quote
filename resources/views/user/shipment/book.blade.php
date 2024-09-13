@@ -46,7 +46,7 @@
                                                 <span class="error text-danger"></span>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="from_company" class="form-label">Company</label>
+                                                <label for="from_company" class="form-label">Company <span class="text-danger">*</span></label>
                                                 <input type="text" name="from_company" id="from_company" class="form-control form-control-lg">
                                                 <span class="error text-danger"></span>
                                             </div>
@@ -67,7 +67,7 @@
                                             </div>
     
                                             <div class="mb-3">
-                                                <label for="from_state" class="form-label">State</label>
+                                                <label for="from_state" class="form-label">State <span class="text-danger">*</span></label>
                                                 <select name="from_state" id="from_state" class="form-select">
                                                     <option value="">Select State</option>
                                                     @foreach ($states as $k=>$v)
@@ -158,7 +158,7 @@
                                                 <span class="error text-danger"></span>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="to_company" class="form-label">Company</label>
+                                                <label for="to_company" class="form-label">Company <span class="text-danger">*</span></label>
                                                 <input type="text" name="to_company" id="to_company" class="form-control form-control-lg">
                                                 <span class="error text-danger"></span>
                                             </div>
@@ -179,7 +179,7 @@
                                             </div>
     
                                             <div class="mb-3">
-                                                <label for="to_state" class="form-label">State</label>
+                                                <label for="to_state" class="form-label">State <span class="text-danger">*</span></label>
                                                 <select name="to_state" id="to_state" class="form-select">
                                                     <option value="">Select State</option>
                                                     @foreach ($states as $k=>$v)
