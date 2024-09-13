@@ -9,6 +9,8 @@ use App\Http\Controllers\Auth\AuthenticationController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\BookShipmentController;
 
+use App\Http\Controllers\Admin\DashController;
+
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -30,9 +32,8 @@ Route::group(['middleware' => 'guest'], function () {
 
 
 Route::middleware(['auth','auth.admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/',function(){
-        return view('admin.dashboard');
-    })->name("dashboard");
+    Route::get('/',[DashController::class,'dashboard'])->name("dashboard");
+    Route::get('shipment/orders',[DashController::class,'shipment_orders'])->name('shipment.orders');
 });
 
 Route::middleware(['auth','auth.user'])->prefix('user')->name('user.')->group(function () {
