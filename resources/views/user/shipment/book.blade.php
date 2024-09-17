@@ -46,7 +46,7 @@
                                                 <span class="error text-danger"></span>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="from_company" class="form-label">Company <span class="text-danger">*</span></label>
+                                                <label for="from_company" class="form-label">Company</label>
                                                 <input type="text" name="from_company" id="from_company" class="form-control form-control-lg">
                                                 <span class="error text-danger"></span>
                                             </div>
@@ -158,7 +158,7 @@
                                                 <span class="error text-danger"></span>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="to_company" class="form-label">Company <span class="text-danger">*</span></label>
+                                                <label for="to_company" class="form-label">Company</label>
                                                 <input type="text" name="to_company" id="to_company" class="form-control form-control-lg">
                                                 <span class="error text-danger"></span>
                                             </div>

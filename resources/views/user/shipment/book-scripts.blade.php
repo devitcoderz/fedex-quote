@@ -344,7 +344,7 @@ $(document).ready(function(){
                 package:package
             },
             success:function(response){
-                console.log(response)
+                // console.log(response)
                 if(response.code == 200){ // success
                     console.log("RATE FETCH API SUCCESS")
                     console.log(response)
@@ -396,8 +396,8 @@ $(document).ready(function(){
                 }else if(response.code == 201){ // toast erros
                     console.log('Rate Fetch API ERROR')
                     console.log(response.response)
-                    if(response.response.errors){
-                        $.each(response.response.errors,function(i,e){
+                    if(response.response.response.errors){
+                        $.each(response.response.response.errors,function(i,e){
                             if(e.code){
                                 toastr.error(e.message)
                             }
