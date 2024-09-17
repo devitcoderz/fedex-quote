@@ -195,7 +195,7 @@ class FedExService
             ];
 
             $payload = [
-                "labelResponseOptions" => "URL_ONLY", 
+                "labelResponseOptions" => "URL_ONLY", // LABEL / URL_ONLY 
                 "requestedShipment" => [
                     "shipper" => [
                         "contact" => [
@@ -204,9 +204,7 @@ class FedExService
                             "companyName" => $from['company'] 
                         ], 
                         "address" => [
-                            "streetLines" => [
-                                "SHIPPER STREET LINE 1" 
-                            ], 
+                            "streetLines" => $from_addr_lines, 
                             "city" => $from['city'], 
                             "stateOrProvinceCode" => $from['state'], 
                             "postalCode" => $from['zipcode'], 
@@ -221,10 +219,7 @@ class FedExService
                                 "companyName" => $to['company'] 
                             ], 
                             "address" => [
-                                "streetLines" => [
-                                    "RECIPIENT STREET LINE 1", 
-                                    "RECIPIENT STREET LINE 2" 
-                                ], 
+                                "streetLines" => $to_addr_lines, 
                                 "city" => $to['city'], 
                                 "stateOrProvinceCode" => $to['state'], 
                                 "postalCode" => $to['zipcode'], 
@@ -234,7 +229,7 @@ class FedExService
                     ], 
                     "shipDatestamp" => $package['shipment_date'], 
                     "serviceType" => $shipping['service_type'], //'PRIORITY_OVERNIGHT', 
-                    "packagingType" => "FEDEX_ENVELOPE", 
+                    "packagingType" => "YOUR_PACKAGING", //FEDEX_ENVELOPE 
                     "pickupType" => "USE_SCHEDULED_PICKUP", 
                     "blockInsightVisibility" => false, 
                     "shippingChargesPayment" => [
@@ -249,23 +244,22 @@ class FedExService
                         ] 
                     ], 
                     "labelSpecification" => [
-                        "imageType" => "PNG", //PNG PDF 
-                        "labelStockType" => "PAPER_4X6" 
+                        'labelStockType'=>'PAPER_4X6',
+                        'imageType'=>'PNG',//PDF PNG,
+                     
                     ], 
                     "requestedPackageLineItems" => [
                         [
                             "weight" => [
                                 "value" => $package['weight'], 
-                                "units" => "KB" 
+                                "units" => "LB" 
                             ],
-                            // "dimensions"=>[
-                            //     'length'=>2,
-                            //     'width'=>2,
-                            //     'height'=>2,
-                            //     'units'=>'IN'
-                            // ],
-                           
-
+                            "dimensions"=>[
+                                'length'=>$package['length'],
+                                'width'=>$package['width'],
+                                'height'=>$package['height'],
+                                'units'=>'IN'
+                            ],
                         ],
                          
                     ] 
@@ -650,7 +644,7 @@ class FedExService
                     'requestedPackageLineItems' => [
                         [
                             'weight' => [
-                                'units' => 'KG',
+                                'units' => 'LB',
                                 'value' => $package['weight'],
                             ],
                             'dimensions'=>[

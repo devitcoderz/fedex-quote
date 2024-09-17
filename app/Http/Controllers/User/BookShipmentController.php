@@ -18,8 +18,9 @@ use Carbon\Carbon;
 use Stripe\Stripe;
 use Stripe\Charge;
 
-
 use Auth;
+
+use GDImage;
 
 class BookShipmentController extends Controller
 {
@@ -42,9 +43,9 @@ class BookShipmentController extends Controller
 
     
     public function test(FedExService $fedex){
-        // return $fedex->fedexShipping();
-        $response =  $fedex->fedexLocationByPincode("10003");
-        echo "<pre>"; print_r($response); die;
+        return $fedex->fedexShipping();
+        // $response =  $fedex->fedexLocationByPincode("10003");
+        // echo "<pre>"; print_r($response); die;
         // $from = [
         //     'streets' => [
         //         '2970 S Hermitage Rd'
@@ -123,7 +124,7 @@ class BookShipmentController extends Controller
                 'state' => 'required|string',
                 'zipcode' => 'required|numeric|min:5',
                 'phone_number' => 'required|numeric|min:10',
-                'company'=>'required|min:5',
+    
             ];
             $from_validator = Validator::make($input['from'],$from_rules);
             
@@ -140,7 +141,7 @@ class BookShipmentController extends Controller
                 'state' => 'required|string',
                 'zipcode' => 'required|numeric|min:5',
                 'phone_number' => 'required|numeric|min:10',
-                'company'=>'required|min:5',
+               
             ];
             $to_validator = Validator::make($input['to'],$to_rules);
             
@@ -249,7 +250,6 @@ class BookShipmentController extends Controller
                 'response'=>$respo
             ];
         }else{
-            return "inside 201";
             $finalResult = [
                 "success"=>false,
                 'code'=>201,
@@ -295,6 +295,23 @@ class BookShipmentController extends Controller
         $checkout = Session::get("checkout");
         // dd($checkout);
         return view('user.checkout.checkout',compact('checkout'));
+    }
+
+    public function cropImage($inputFilePath, $outputFilePath)
+    {
+        $image = imagecreatefrompng($inputFilePath);
+        $cropX = 0;
+        $cropY = 0;
+        $cropWidth = 1218;  // Adjust as needed
+        $cropHeight = 812; // Adjust as needed
+
+        $croppedImage = imagecreatetruecolor($cropWidth, $cropHeight);
+        imagecopyresampled($croppedImage, $image, 0, 0, $cropX, $cropY, $cropWidth, $cropHeight, $cropWidth, $cropHeight);
+
+        imagepng($croppedImage, $outputFilePath);
+
+        imagedestroy($image);
+        imagedestroy($croppedImage);
     }
 
     public function checkout_submit(FedExService $fedex,Request $request){
@@ -408,7 +425,12 @@ class BookShipmentController extends Controller
                     
                         // Save the decoded image data as a file
                         file_put_contents($filePath, $imageData);
-            
+                      
+                        // $croppedFilePath  = public_path('images/crop-' . $fileName);
+                       
+                
+                        // $this->cropImage($filePath, $filePath);
+                
                         $image = $fileName;
                     }else{
                         $image = $respo['pieceResponses'][0]['packageDocuments'][0]['url'];
